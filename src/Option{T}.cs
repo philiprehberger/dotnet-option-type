@@ -142,6 +142,94 @@ public readonly struct Option<T> : IEquatable<Option<T>>
     }
 
     /// <summary>
+    /// Asynchronously transforms the contained value using the specified mapping function.
+    /// Returns <c>None</c> if this option is empty.
+    /// </summary>
+    /// <typeparam name="U">The type of the transformed value.</typeparam>
+    /// <param name="mapper">The async function to apply to the contained value.</param>
+    /// <returns>A task that resolves to an Option containing the transformed value, or None.</returns>
+    public async Task<Option<U>> MapAsync<U>(Func<T, Task<U>> mapper)
+    {
+        return _isSome ? Option.Some(await mapper(_value).ConfigureAwait(false)) : Option.None<U>();
+    }
+
+    /// <summary>
+    /// Asynchronously chains an option-returning function on the contained value.
+    /// Returns <c>None</c> if this option is empty.
+    /// </summary>
+    /// <typeparam name="U">The type of the value in the returned Option.</typeparam>
+    /// <param name="binder">The async function that returns an Option.</param>
+    /// <returns>A task that resolves to the result of the binder function, or None.</returns>
+    public async Task<Option<U>> BindAsync<U>(Func<T, Task<Option<U>>> binder)
+    {
+        return _isSome ? await binder(_value).ConfigureAwait(false) : Option.None<U>();
+    }
+
+    /// <summary>
+    /// Asynchronously pattern matches on this option, returning the result of the appropriate function.
+    /// </summary>
+    /// <typeparam name="U">The return type.</typeparam>
+    /// <param name="some">The async function to call if this option contains a value.</param>
+    /// <param name="none">The async function to call if this option is empty.</param>
+    /// <returns>A task that resolves to the result of the matched function.</returns>
+    public async Task<U> MatchAsync<U>(Func<T, Task<U>> some, Func<Task<U>> none)
+    {
+        return _isSome
+            ? await some(_value).ConfigureAwait(false)
+            : await none().ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Returns this option if it contains a value; otherwise returns the specified fallback option.
+    /// </summary>
+    /// <param name="fallback">The fallback option to return if this option is empty.</param>
+    /// <returns>This option if Some; otherwise the fallback.</returns>
+    public Option<T> OrElse(Option<T> fallback)
+    {
+        return _isSome ? this : fallback;
+    }
+
+    /// <summary>
+    /// Returns this option if it contains a value; otherwise invokes the factory and returns its result.
+    /// </summary>
+    /// <param name="fallbackFactory">The factory function that produces a fallback option.</param>
+    /// <returns>This option if Some; otherwise the result of the factory.</returns>
+    public Option<T> OrElse(Func<Option<T>> fallbackFactory)
+    {
+        return _isSome ? this : fallbackFactory();
+    }
+
+    /// <summary>
+    /// Executes a side effect when this option contains a value, then returns the option unchanged.
+    /// </summary>
+    /// <param name="action">The action to execute on the contained value.</param>
+    /// <returns>This option, unchanged.</returns>
+    public Option<T> Tap(Action<T> action)
+    {
+        if (_isSome)
+        {
+            action(_value);
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    /// Executes a side effect when this option is empty, then returns the option unchanged.
+    /// </summary>
+    /// <param name="action">The action to execute when None.</param>
+    /// <returns>This option, unchanged.</returns>
+    public Option<T> TapNone(Action action)
+    {
+        if (!_isSome)
+        {
+            action();
+        }
+
+        return this;
+    }
+
+    /// <summary>
     /// Determines whether two options are equal.
     /// </summary>
     public static bool operator ==(Option<T> left, Option<T> right) => left.Equals(right);

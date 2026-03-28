@@ -39,4 +39,42 @@ public static class Option
     {
         return value is null ? None<T>() : Some(value);
     }
+
+    /// <summary>
+    /// Wraps a function that may throw into an Option. Returns <c>Some(result)</c> on success
+    /// or <c>None</c> if the function throws any exception.
+    /// </summary>
+    /// <typeparam name="T">The type of the value returned by the function.</typeparam>
+    /// <param name="factory">The function to execute.</param>
+    /// <returns>Some containing the result on success; None on exception.</returns>
+    public static Option<T> Try<T>(Func<T> factory)
+    {
+        try
+        {
+            return Some(factory());
+        }
+        catch
+        {
+            return None<T>();
+        }
+    }
+
+    /// <summary>
+    /// Wraps an async function that may throw into an Option. Returns <c>Some(result)</c> on success
+    /// or <c>None</c> if the function throws any exception.
+    /// </summary>
+    /// <typeparam name="T">The type of the value returned by the function.</typeparam>
+    /// <param name="factory">The async function to execute.</param>
+    /// <returns>A task that resolves to Some containing the result on success; None on exception.</returns>
+    public static async Task<Option<T>> TryAsync<T>(Func<Task<T>> factory)
+    {
+        try
+        {
+            return Some(await factory().ConfigureAwait(false));
+        }
+        catch
+        {
+            return None<T>();
+        }
+    }
 }

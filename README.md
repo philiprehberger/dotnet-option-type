@@ -2,7 +2,11 @@
 
 [![CI](https://github.com/philiprehberger/dotnet-option-type/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/dotnet-option-type/actions/workflows/ci.yml)
 [![NuGet](https://img.shields.io/nuget/v/Philiprehberger.OptionType.svg)](https://www.nuget.org/packages/Philiprehberger.OptionType)
+[![GitHub release](https://img.shields.io/github/v/release/philiprehberger/dotnet-option-type)](https://github.com/philiprehberger/dotnet-option-type/releases)
+[![Last updated](https://img.shields.io/github/last-commit/philiprehberger/dotnet-option-type)](https://github.com/philiprehberger/dotnet-option-type/commits/main)
 [![License](https://img.shields.io/github/license/philiprehberger/dotnet-option-type)](LICENSE)
+[![Bug Reports](https://img.shields.io/github/issues/philiprehberger/dotnet-option-type/bug)](https://github.com/philiprehberger/dotnet-option-type/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
+[![Feature Requests](https://img.shields.io/github/issues/philiprehberger/dotnet-option-type/enhancement)](https://github.com/philiprehberger/dotnet-option-type/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
 [![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
 
 Option/Maybe monad for explicit null handling with Map, Bind, Match, and LINQ support.
@@ -72,6 +76,49 @@ int? nullValue = null;
 var noneOption = nullValue.ToOption();  // None
 ```
 
+### Async Operations
+
+```csharp
+var result = await Option.Some(42)
+    .MapAsync(async x => await FetchMultiplierAsync(x));
+
+var bound = await Option.Some("user-123")
+    .BindAsync(async id => await FindUserAsync(id));
+
+var message = await Option.Some(42)
+    .MatchAsync(
+        some: async v => await FormatAsync(v),
+        none: () => Task.FromResult("not found")
+    );
+```
+
+### Fallback with OrElse
+
+```csharp
+var primary = Option.None<int>();
+var result = primary.OrElse(Option.Some(99));  // Some(99)
+
+var lazy = primary.OrElse(() => Option.Some(ComputeDefault()));  // factory only called when None
+```
+
+### Safe Execution with Try
+
+```csharp
+var parsed = Option.Try(() => int.Parse("42"));         // Some(42)
+var failed = Option.Try(() => int.Parse("not a number")); // None
+
+var fetched = await Option.TryAsync(async () => await FetchDataAsync());
+```
+
+### Side Effects with Tap
+
+```csharp
+var result = Option.Some(42)
+    .Tap(v => Console.WriteLine($"Processing: {v}"))
+    .Map(x => x * 2)
+    .TapNone(() => Console.WriteLine("No value found"));
+```
+
 ## API
 
 ### `Option` (static)
@@ -81,6 +128,8 @@ var noneOption = nullValue.ToOption();  // None
 | `Some<T>(T value)` | Create an Option containing a value |
 | `None<T>()` | Create an empty Option |
 | `From<T>(T? value)` | Create an Option from a nullable value |
+| `Try<T>(Func<T>)` | Wrap a function that may throw into Some or None |
+| `TryAsync<T>(Func<Task<T>>)` | Wrap an async function that may throw into Some or None |
 
 ### `Option<T>` (struct)
 
@@ -92,6 +141,13 @@ var noneOption = nullValue.ToOption();  // None
 | `Bind<U>(Func<T, Option<U>>)` | Chain option-returning functions |
 | `Filter(Func<T, bool>)` | Keep value only if predicate holds |
 | `Match<U>(Func<T, U>, Func<U>)` | Pattern match on the option |
+| `MapAsync<U>(Func<T, Task<U>>)` | Asynchronously transform the contained value |
+| `BindAsync<U>(Func<T, Task<Option<U>>>)` | Asynchronously chain option-returning functions |
+| `MatchAsync<U>(Func<T, Task<U>>, Func<Task<U>>)` | Asynchronously pattern match on the option |
+| `OrElse(Option<T>)` | Return this option or the fallback |
+| `OrElse(Func<Option<T>>)` | Return this option or invoke the fallback factory |
+| `Tap(Action<T>)` | Execute a side effect when Some |
+| `TapNone(Action)` | Execute a side effect when None |
 | `ValueOr(T)` | Get value or default |
 | `ValueOrThrow()` | Get value or throw InvalidOperationException |
 | `ToString()` | String representation |
@@ -114,6 +170,13 @@ var noneOption = nullValue.ToOption();  // None
 dotnet build src/Philiprehberger.OptionType.csproj --configuration Release
 ```
 
+## Support
+
+If you find this package useful, consider giving it a star on GitHub — it helps motivate continued maintenance and development.
+
+[![LinkedIn](https://img.shields.io/badge/Philip%20Rehberger-LinkedIn-0A66C2?logo=linkedin)](https://www.linkedin.com/in/philiprehberger)
+[![More packages](https://img.shields.io/badge/more-open%20source%20packages-blue)](https://philiprehberger.com/open-source-packages)
+
 ## License
 
-MIT
+[MIT](LICENSE)

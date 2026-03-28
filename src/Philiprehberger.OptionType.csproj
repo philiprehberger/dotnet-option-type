@@ -8,7 +8,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>Philiprehberger.OptionType</PackageId>
-    <Version>0.1.1</Version>
+    <Version>0.2.0</Version>
     <Authors>Philip Rehberger</Authors>
     <Description>Option/Maybe monad for explicit null handling with Map, Bind, Match, and LINQ support.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
