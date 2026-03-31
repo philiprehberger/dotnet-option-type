@@ -2,12 +2,7 @@
 
 [![CI](https://github.com/philiprehberger/dotnet-option-type/actions/workflows/ci.yml/badge.svg)](https://github.com/philiprehberger/dotnet-option-type/actions/workflows/ci.yml)
 [![NuGet](https://img.shields.io/nuget/v/Philiprehberger.OptionType.svg)](https://www.nuget.org/packages/Philiprehberger.OptionType)
-[![GitHub release](https://img.shields.io/github/v/release/philiprehberger/dotnet-option-type)](https://github.com/philiprehberger/dotnet-option-type/releases)
 [![Last updated](https://img.shields.io/github/last-commit/philiprehberger/dotnet-option-type)](https://github.com/philiprehberger/dotnet-option-type/commits/main)
-[![License](https://img.shields.io/github/license/philiprehberger/dotnet-option-type)](LICENSE)
-[![Bug Reports](https://img.shields.io/github/issues/philiprehberger/dotnet-option-type/bug)](https://github.com/philiprehberger/dotnet-option-type/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
-[![Feature Requests](https://img.shields.io/github/issues/philiprehberger/dotnet-option-type/enhancement)](https://github.com/philiprehberger/dotnet-option-type/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
-[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
 
 Option/Maybe monad for explicit null handling with Map, Bind, Match, and LINQ support.
 
@@ -172,10 +167,21 @@ dotnet build src/Philiprehberger.OptionType.csproj --configuration Release
 
 ## Support
 
-If you find this package useful, consider giving it a star on GitHub — it helps motivate continued maintenance and development.
+If you find this project useful:
 
-[![LinkedIn](https://img.shields.io/badge/Philip%20Rehberger-LinkedIn-0A66C2?logo=linkedin)](https://www.linkedin.com/in/philiprehberger)
-[![More packages](https://img.shields.io/badge/more-open%20source%20packages-blue)](https://philiprehberger.com/open-source-packages)
+⭐ [Star the repo](https://github.com/philiprehberger/dotnet-option-type)
+
+🐛 [Report issues](https://github.com/philiprehberger/dotnet-option-type/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
+
+💡 [Suggest features](https://github.com/philiprehberger/dotnet-option-type/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
+
+❤️ [Sponsor development](https://github.com/sponsors/philiprehberger)
+
+🌐 [All Open Source Projects](https://philiprehberger.com/open-source-packages)
+
+💻 [GitHub Profile](https://github.com/philiprehberger)
+
+🔗 [LinkedIn Profile](https://www.linkedin.com/in/philiprehberger)
 
 ## License
 
